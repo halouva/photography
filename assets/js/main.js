@@ -1,28 +1,3 @@
-
-		// Prevent default link behavior for .thumbnail anchors only when breakpoint is large or above
-		$(function() {
-			var $main = $('#main');
-			if ($main.length) {
-				$main.on('click', 'a.thumbnail', function(e) {
-					if (breakpoints.active('>=large')) {
-						e.preventDefault();
-						// Find the index of the clicked thumbnail and switch to that slide
-						var $thumb = $(this);
-						var idx = $thumb.data('index');
-						if (typeof idx === 'undefined') {
-							// Try to get index from parent article if not set
-							var $article = $thumb.closest('article');
-							idx = $article.index();
-						}
-						if (typeof main === 'object' && typeof main.switchTo === 'function') {
-							main.switchTo(idx);
-						} else if (typeof window.main === 'object' && typeof window.main.switchTo === 'function') {
-							window.main.switchTo(idx);
-						}
-					}
-				});
-			}
-		});
 /*
 	Lens by HTML5 UP
 	html5up.net | @ajlkn
@@ -404,6 +379,25 @@ var main = (function($) { var _ = {
 	 */
 	initViewer: function() {
 
+		// Bind thumbnail click event.
+			_.$thumbnails
+				.on('click', '.thumbnail', function(event) {
+
+					var $this = $(this);
+
+					// Stop other events.
+						event.preventDefault();
+						event.stopPropagation();
+
+					// Locked? Blur.
+						if (_.locked)
+							$this.blur();
+
+					// Switch to this thumbnail's slide.
+						_.switchTo($this.data('index'));
+
+				});
+
 		// Create slides from thumbnails.
 			_.$thumbnails.children()
 				.each(function() {
@@ -489,46 +483,6 @@ var main = (function($) { var _ = {
 			_.initProperties();
 			_.initViewer();
 			_.initEvents();
-
-		// Poptrox integration only for breakpoints smaller than large
-		var poptroxActive = false;
-		function enablePoptrox() {
-			if (poptroxActive || typeof _.$main.poptrox !== 'function') return;
-			_.$main.poptrox({
-				baseZIndex: 20000,
-				fadeSpeed: 300,
-				onPopupClose: function() { _.$body.removeClass('modal-active'); },
-				onPopupOpen: function() { _.$body.addClass('modal-active'); },
-				overlayOpacity: 0,
-				popupCloserText: '',
-				popupHeight: 150,
-				popupLoaderText: '<div class="poptrox-spinner"></div>',
-				popupSpeed: 300,
-				popupWidth: 150,
-				selector: '.thumbnail',
-				usePopupCaption: true,
-				usePopupCloser: true,
-				usePopupDefaultStyling: false,
-				usePopupForceClose: true,
-				usePopupLoader: true,
-				usePopupNav: true,
-				windowMargin: 50,
-			});
-			// Hack: Set margins to 0 when 'xsmall' activates.
-			breakpoints.on('<=xsmall', function() {
-				_.$main[0]._poptrox.windowMargin = 0;
-			});
-			breakpoints.on('>xsmall', function() {
-				_.$main[0]._poptrox.windowMargin = 50;
-			});
-			poptroxActive = true;
-		}
-		function disablePoptrox() {
-			// No built-in destroy, but you could hide popups or unbind events if needed
-			// For now, just prevent re-initialization
-		}
-		breakpoints.on('<large', enablePoptrox);
-		breakpoints.on('>=large', disablePoptrox);
 
 		// Show first slide if xsmall isn't active.
 			breakpoints.on('>xsmall', function() {
@@ -740,6 +694,52 @@ var main = (function($) { var _ = {
 
 		// Switch.
 			_.switchTo(i);
+
+	},
+
+	/**
+	 * Shows the main wrapper.
+	 */
+	show: function() {
+
+		// Already visible? Bail.
+			if (!_.$body.hasClass('fullscreen'))
+				return;
+
+		// Show main wrapper.
+			_.$body.removeClass('fullscreen');
+
+		// Focus.
+			_.$main.focus();
+
+	},
+
+	/**
+	 * Hides the main wrapper.
+	 */
+	hide: function() {
+
+		// Already hidden? Bail.
+			if (_.$body.hasClass('fullscreen'))
+				return;
+
+		// Hide main wrapper.
+			_.$body.addClass('fullscreen');
+
+		// Blur.
+			_.$main.blur();
+
+	},
+
+	/**
+	 * Toggles main wrapper.
+	 */
+	toggle: function() {
+
+		if (_.$body.hasClass('fullscreen'))
+			_.show();
+		else
+			_.hide();
 
 	},
 
