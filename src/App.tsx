@@ -4,23 +4,47 @@ import CategoryThumbnails from "./components/CategoryThumbnails";
 import categories from "./constants/constants";
 import Bio from "./components/Bio";
 import CategoryScreen from "./components/CategoryScreen";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import SelectedPhoto from "./components/SelectedPhoto";
 
 function App() {
   const [activeCategory, setActiveCategory] = useState(categories.Empty);
   const clearCategory = () => setActiveCategory(categories.Empty);
 
   var mainArea = <></>;
-  if (activeCategory === categories.Empty) {
-    mainArea = (
-      <>
-        <Bio />
-        <CategoryThumbnails onClick={setActiveCategory} />
-      </>
-    );
-  } else {
-    mainArea = <CategoryScreen category={activeCategory} />;
-  }
-  return <>{mainArea}</>;
+  // if (activeCategory === categories.Empty) {
+  //   mainArea = (
+  //     <>
+  //       <Bio />
+  //       <CategoryThumbnails onClick={setActiveCategory} />
+  //     </>
+  //   );
+  // } else {
+  //   mainArea = <CategoryScreen category={activeCategory} />;
+  // }
+  return (
+    <BrowserRouter>
+      {/* Content */}
+
+      {/* Navigation */}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Bio />
+              <CategoryThumbnails onClick={setActiveCategory} />
+            </>
+          }
+        />
+        <Route path="/category/:categoryName" element={<CategoryScreen />} />
+        <Route
+          path="/category/:categoryName/:img"
+          element={<SelectedPhoto />}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

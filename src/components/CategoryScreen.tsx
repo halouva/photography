@@ -1,19 +1,38 @@
 import Thumbnail from "./Thumbnail";
 import Bio from "./Bio";
 import { act, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 
-type CategoryScreenProps = {
-  category: string;
-};
+// type CategoryScreenProps = {
+//   category: string;
+// };
 
-function CategoryScreen({ category }: CategoryScreenProps) {
+function CategoryScreen() {
   // big screen
   // buttons under big screen
   // thumbnails
+  let { categoryName } = useParams();
+  if (!categoryName || categoryName === undefined) {
+    return;
+  }
+  const category = categoryName;
   const [activePhoto, setActivePhoto] = useState(
     getPhotoPathString(1, category)
   );
 
+  // const [photoClicked, setPhotoClicked] = useState(false);
+
+  // if (photoClicked) {
+  //   return (
+  //     <>
+  //       <div className="black-back-drop">
+  //         <div className="selected-img-container">
+  //           <img className="selected-img" src={activePhoto}></img>
+  //         </div>
+  //       </div>
+  //     </>
+  //   ); // full size image
+  // } else {
   return (
     <>
       {/* container for the whole screen */}
@@ -21,18 +40,26 @@ function CategoryScreen({ category }: CategoryScreenProps) {
         {/* container for left hand side */}
         <div className="bio-and-thumbs-container">
           <Bio />
-          <div className="thumbnail-container">{getThumbnails()}</div>
+          <div className="spacer-xl" />
+          <div className="thumbnail-container">
+            {getThumbnails(
+              (imgPath: string) => setActivePhoto(imgPath),
+              category
+            )}
+          </div>
         </div>
         {/* container for active image */}
         <div className="active-img-container">
-          <img className="active-img" src={activePhoto}></img>
+          <Link to={`/category/${category}/${activePhoto.slice(-6, -4)}`}>
+            <img className="active-img" src={activePhoto}></img>
+          </Link>
         </div>
       </div>
     </>
   );
 }
 
-function getThumbnails() {
+function getThumbnails(onClick: (imgPath: string) => void, category: string) {
   // ------ thumbnails ------
   const start = 1;
   const end = 30;
@@ -41,7 +68,13 @@ function getThumbnails() {
     (_, index) => start + index
   );
   const thumnbnails = customRange.map((n, index) => {
-    return <Thumbnail path={getPhotoPathString(n, "bacon")} />;
+    return (
+      <Thumbnail
+        category={category}
+        onClick={onClick}
+        path={getPhotoPathString(n, "bacon")}
+      />
+    );
   });
 
   return (
