@@ -24,17 +24,15 @@ function App() {
   // }
   return (
     <BrowserRouter>
-      {/* Content */}
-
       {/* Navigation */}
       <Routes>
         <Route
           path="/"
           element={
-            <>
+            <div className="main-page-container">
               <Bio />
               <CategoryThumbnails onClick={setActiveCategory} />
-            </>
+            </div>
           }
         />
         <Route path="/category/:categoryName" element={<CategoryScreen />} />

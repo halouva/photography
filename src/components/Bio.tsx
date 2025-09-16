@@ -24,6 +24,9 @@ function Bio() {
           <a href="https://vimeo.com/showcase/11825220?share=copy">
             <img className="contact-icon" src="src\assets\vimeo.svg"></img>
           </a>
+          <a href="https://www.redbubble.com/people/thomashalouva/shop">
+            <img className="contact-icon" src="src\assets\redbubble.svg"></img>
+          </a>
           <a href="mailto:thomas.halouva@outlook.com">
             <img
               className="contact-icon"

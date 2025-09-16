@@ -37,22 +37,25 @@ function CategoryScreen() {
     <>
       {/* container for the whole screen */}
       <div className="container">
+        {/* container for active image */}
+        <div className="active-img-container">
+          <Link
+            to={`/category/${category}/${activePhoto.slice(-6, -4)}`}
+            viewTransition
+          >
+            <img className="active-img" src={activePhoto}></img>
+          </Link>
+        </div>
         {/* container for left hand side */}
         <div className="bio-and-thumbs-container">
           <Bio />
-          <div className="spacer-xl" />
+          <div className="spacer-xl"> </div>
           <div className="thumbnail-container">
             {getThumbnails(
               (imgPath: string) => setActivePhoto(imgPath),
               category
             )}
           </div>
-        </div>
-        {/* container for active image */}
-        <div className="active-img-container">
-          <Link to={`/category/${category}/${activePhoto.slice(-6, -4)}`}>
-            <img className="active-img" src={activePhoto}></img>
-          </Link>
         </div>
       </div>
     </>
@@ -62,7 +65,7 @@ function CategoryScreen() {
 function getThumbnails(onClick: (imgPath: string) => void, category: string) {
   // ------ thumbnails ------
   const start = 1;
-  const end = 30;
+  const end = 12;
   const customRange = Array.from(
     { length: end - start },
     (_, index) => start + index
