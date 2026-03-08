@@ -21,7 +21,6 @@ function Thumbnail({ path, category, onClick }: ThumbnailProps) {
       className="thumbnail"
     >
       <img className="thumbnail-img" src={path}></img>
-      {/* <span className="thumbnail-text">Description</span> */}
     </div>
   );
 }

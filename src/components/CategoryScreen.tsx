@@ -30,12 +30,21 @@ function CategoryScreen() {
     return `/src/assets/${category}/thumbnails/${num}.jpg`;
   }
 
+  function getPhotoFullPathString(number: number) {
+    const num = number < 10 ? "0" + number : number;
+    return `/src/assets/${category}/fulls/${num}.jpg`;
+  }
+
+  function convertThumbnailPathToFullPath(path: string) {
+    return path.replace("thumbnails", "fulls");
+  }
+
   const { categoryName } = useParams();
   if (!categoryName || categoryName === undefined) {
     return;
   }
   const category = categoryName;
-  const [activePhoto, setActivePhoto] = useState(getPhotoPathString(1));
+  const [activePhoto, setActivePhoto] = useState(getPhotoFullPathString(1));
   const activeImgContainerRef = useRef<HTMLDivElement | null>(null);
   const [sidebarHeight, setSidebarHeight] = useState<number | null>(null);
 
@@ -92,7 +101,8 @@ function CategoryScreen() {
           <Bio />
           <div className="thumbnail-container">
             {getThumbnails(
-              (imgPath: string) => setActivePhoto(imgPath),
+              (imgPath: string) =>
+                setActivePhoto(convertThumbnailPathToFullPath(imgPath)),
               category,
             )}
           </div>

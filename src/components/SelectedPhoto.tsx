@@ -37,7 +37,7 @@ function SelectedPhoto() {
         <div className="selected-img-container">
           <img
             className={isPortrait ? "selected-img-portrait" : "selected-img"}
-            src={`/src/assets/fulls/${img}.jpg`}
+            src={`/src/assets/${categoryName}/fulls/${img}.jpg`}
           ></img>
         </div>
       </div>
