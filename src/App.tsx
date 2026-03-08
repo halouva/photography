@@ -11,17 +11,6 @@ function App() {
   const [activeCategory, setActiveCategory] = useState(categories.Empty);
   const clearCategory = () => setActiveCategory(categories.Empty);
 
-  var mainArea = <></>;
-  // if (activeCategory === categories.Empty) {
-  //   mainArea = (
-  //     <>
-  //       <Bio />
-  //       <CategoryThumbnails onClick={setActiveCategory} />
-  //     </>
-  //   );
-  // } else {
-  //   mainArea = <CategoryScreen category={activeCategory} />;
-  // }
   return (
     <BrowserRouter>
       {/* Navigation */}

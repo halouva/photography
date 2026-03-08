@@ -1,6 +1,6 @@
 import Thumbnail from "./Thumbnail";
 import Bio from "./Bio";
-import { act, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
 // type CategoryScreenProps = {
@@ -8,37 +8,79 @@ import { useParams, Link } from "react-router-dom";
 // };
 
 function CategoryScreen() {
-  // big screen
-  // buttons under big screen
-  // thumbnails
+  function getThumbnails(onClick: (imgPath: string) => void, category: string) {
+    // ------ thumbnails ------
+    const start = 1;
+    const end = 12;
+    const customRange = Array.from(
+      { length: end - start },
+      (_, i) => start + i,
+    );
+    const thumnbnails = customRange.map((n) => {
+      return (
+        <Thumbnail
+          category={category}
+          onClick={onClick}
+          path={getPhotoPathString(n)}
+        />
+      );
+    });
+
+    return <>{thumnbnails}</>;
+  }
+
+  function getPhotoPathString(number: number) {
+    const num = number < 10 ? "0" + number : number;
+    return `/src/assets/${category}/thumbnails/${num}.jpg`;
+  }
+
   let { categoryName } = useParams();
   if (!categoryName || categoryName === undefined) {
     return;
   }
   const category = categoryName;
-  const [activePhoto, setActivePhoto] = useState(
-    getPhotoPathString(1, category)
-  );
+  const [activePhoto, setActivePhoto] = useState(getPhotoPathString(1));
+  const activeImgContainerRef = useRef<HTMLDivElement | null>(null);
+  const [sidebarHeight, setSidebarHeight] = useState<number | null>(null);
 
-  // const [photoClicked, setPhotoClicked] = useState(false);
+  useEffect(() => {
+    const activeImgContainer = activeImgContainerRef.current;
+    if (!activeImgContainer) {
+      setSidebarHeight(null);
+      return;
+    }
 
-  // if (photoClicked) {
-  //   return (
-  //     <>
-  //       <div className="black-back-drop">
-  //         <div className="selected-img-container">
-  //           <img className="selected-img" src={activePhoto}></img>
-  //         </div>
-  //       </div>
-  //     </>
-  //   ); // full size image
-  // } else {
+    const syncSidebarHeight = () => {
+      if (window.innerWidth <= 1000) {
+        setSidebarHeight(null);
+        return;
+      }
+
+      const nextHeight = activeImgContainer.getBoundingClientRect().height;
+      setSidebarHeight(nextHeight > 0 ? nextHeight : null);
+    };
+
+    syncSidebarHeight();
+
+    const resizeObserver = new ResizeObserver(() => {
+      syncSidebarHeight();
+    });
+
+    resizeObserver.observe(activeImgContainer);
+    window.addEventListener("resize", syncSidebarHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", syncSidebarHeight);
+    };
+  }, []);
+
   return (
     <>
       {/* container for the whole screen */}
       <div className="container">
         {/* container for active image */}
-        <div className="active-img-container">
+        <div className="active-img-container" ref={activeImgContainerRef}>
           <Link
             to={`/category/${category}/${activePhoto.slice(-6, -4)}`}
             viewTransition
@@ -47,50 +89,21 @@ function CategoryScreen() {
           </Link>
         </div>
         {/* container for left hand side */}
-        <div className="bio-and-thumbs-container">
+        <div
+          className="bio-and-thumbs-container"
+          style={sidebarHeight ? { height: `${sidebarHeight}px` } : undefined}
+        >
           <Bio />
-          <div className="spacer-xl"> </div>
           <div className="thumbnail-container">
             {getThumbnails(
               (imgPath: string) => setActivePhoto(imgPath),
-              category
+              category,
             )}
           </div>
         </div>
       </div>
     </>
   );
-}
-
-function getThumbnails(onClick: (imgPath: string) => void, category: string) {
-  // ------ thumbnails ------
-  const start = 1;
-  const end = 12;
-  const customRange = Array.from(
-    { length: end - start },
-    (_, index) => start + index
-  );
-  const thumnbnails = customRange.map((n, index) => {
-    return (
-      <Thumbnail
-        category={category}
-        onClick={onClick}
-        path={getPhotoPathString(n, "bacon")}
-      />
-    );
-  });
-
-  return (
-    <>
-      <div className="thumbnail-container">{thumnbnails}</div>
-    </>
-  );
-}
-
-function getPhotoPathString(number: number, category: string) {
-  const num = number < 10 ? "0" + number : number;
-  //return `/src/assets/${category}/thumbnails/${num}.jpg`
-  return `/src/assets/thumbs/${num}.jpg`;
 }
 
 export default CategoryScreen;

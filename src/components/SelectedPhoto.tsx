@@ -1,12 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function getAlignment(): string {
-  const landscape = window.innerWidth > window.innerHeight;
-  const alignImg = landscape ? "selected-img" : "selected-img-portrait";
-  return alignImg;
-}
-
 function SelectedPhoto() {
   const { categoryName, img } = useParams();
 
@@ -49,12 +43,6 @@ function SelectedPhoto() {
       </div>
     </>
   );
-}
-
-function getPhotoPathString(number: number, category: string) {
-  const num = number < 10 ? "0" + number : number;
-  //return `/src/assets/${category}/thumbnails/${num}.jpg`
-  return `/src/assets/thumbs/${num}.jpg`;
 }
 
 export default SelectedPhoto;
