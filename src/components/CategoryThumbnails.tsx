@@ -2,7 +2,6 @@ import categories from "../constants/constants";
 import CategoryThumbnail from "./CategoryThumbnail";
 import { Link } from "react-router-dom";
 
-
 function CategoryThumbnails() {
   const cats = Object.values(categories);
   const thumbnails = cats.map((cat) => {

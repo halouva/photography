@@ -2,51 +2,24 @@ import Thumbnail from "./Thumbnail";
 import Bio from "./Bio";
 import { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { getCategoryImages, getImageById } from "../assets/images";
 
 function CategoryScreen() {
-  function getThumbnails(onClick: (imgPath: string) => void, category: string) {
-    // ------ thumbnails ------
-    const start = 1;
-    const end = 12;
-    const customRange = Array.from(
-      { length: end - start },
-      (_, i) => start + i,
-    );
-    const thumnbnails = customRange.map((n) => {
-      return (
-        <Thumbnail
-          category={category}
-          onClick={onClick}
-          path={getPhotoPathString(n)}
-        />
-      );
-    });
-
-    return <>{thumnbnails}</>;
-  }
-
-  function getPhotoPathString(number: number) {
-    const num = number < 10 ? "0" + number : number;
-    return `/src/assets/${category}/thumbnails/${num}.jpg`;
-  }
-
-  function getPhotoFullPathString(number: number) {
-    const num = number < 10 ? "0" + number : number;
-    return `/src/assets/${category}/fulls/${num}.jpg`;
-  }
-
-  function convertThumbnailPathToFullPath(path: string) {
-    return path.replace("thumbnails", "fulls");
-  }
-
   const { categoryName } = useParams();
   if (!categoryName || categoryName === undefined) {
     return;
   }
   const category = categoryName;
-  const [activePhoto, setActivePhoto] = useState(getPhotoFullPathString(1));
+  const categoryImages = getCategoryImages(category);
+  const [activeImageId, setActiveImageId] = useState(
+    categoryImages[0]?.id ?? "",
+  );
   const activeImgContainerRef = useRef<HTMLDivElement | null>(null);
   const [sidebarHeight, setSidebarHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    setActiveImageId(categoryImages[0]?.id ?? "");
+  }, [category]);
 
   useEffect(() => {
     const activeImgContainer = activeImgContainerRef.current;
@@ -80,17 +53,21 @@ function CategoryScreen() {
     };
   }, []);
 
+  const activeImage =
+    getImageById(category, activeImageId) ?? categoryImages[0];
+
+  if (!activeImage?.full) {
+    return;
+  }
+
   return (
     <>
       {/* container for the whole screen */}
       <div className="container">
         {/* container for active image */}
         <div className="active-img-container" ref={activeImgContainerRef}>
-          <Link
-            to={`/category/${category}/${activePhoto.slice(-6, -4)}`}
-            viewTransition
-          >
-            <img className="active-img" src={activePhoto}></img>
+          <Link to={`/category/${category}/${activeImage.id}`} viewTransition>
+            <img className="active-img" src={activeImage.full}></img>
           </Link>
         </div>
         {/* container for left hand side */}
@@ -100,11 +77,21 @@ function CategoryScreen() {
         >
           <Bio />
           <div className="thumbnail-container">
-            {getThumbnails(
-              (imgPath: string) =>
-                setActivePhoto(convertThumbnailPathToFullPath(imgPath)),
-              category,
-            )}
+            {categoryImages.map((image) => {
+              if (!image.thumbnail) {
+                return null;
+              }
+
+              return (
+                <Thumbnail
+                  key={image.id}
+                  category={category}
+                  imageId={image.id}
+                  onClick={setActiveImageId}
+                  path={image.thumbnail}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

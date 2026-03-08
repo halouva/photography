@@ -7,7 +7,7 @@ import SelectedPhoto from "./components/SelectedPhoto";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/photography">
       {/* Navigation */}
       <Routes>
         <Route
@@ -15,7 +15,7 @@ function App() {
           element={
             <div className="main-page-container">
               <Bio />
-              <CategoryThumbnails/>
+              <CategoryThumbnails />
             </div>
           }
         />

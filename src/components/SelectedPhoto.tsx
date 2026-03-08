@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { getImageById } from "../assets/images";
 
 function SelectedPhoto() {
   const { categoryName, img } = useParams();
 
   const [isPortrait, setIsPortrait] = useState(
-    window.matchMedia("(orientation: portrait)").matches
+    window.matchMedia("(orientation: portrait)").matches,
   );
 
   useEffect(() => {
@@ -31,13 +32,18 @@ function SelectedPhoto() {
     return;
   }
 
+  const selectedImage = getImageById(categoryName, img);
+  if (!selectedImage?.full) {
+    return;
+  }
+
   return (
     <>
       <div className="black-back-drop">
         <div className="selected-img-container">
           <img
             className={isPortrait ? "selected-img-portrait" : "selected-img"}
-            src={`/src/assets/${categoryName}/fulls/${img}.jpg`}
+            src={selectedImage.full}
           ></img>
         </div>
       </div>
