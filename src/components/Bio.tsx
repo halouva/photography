@@ -13,24 +13,33 @@ function Bio() {
         <div className="spacer-sm"></div>
         <div className="contact-icon-container">
           <a href="https://www.linkedin.com/in/thomas-halouva-927201374/">
-            <img className="contact-icon" src="src\assets\linkedin.svg"></img>
+            <img
+              className="contact-icon"
+              src={`${import.meta.env.BASE_URL}/icons/linkedin.svg`}
+            ></img>
           </a>
           <a href="https://www.instagram.com/thomashalouvaphotography/">
             <img
               className="contact-icon"
-              src="src\assets\instagram-square.svg"
+              src={`${import.meta.env.BASE_URL}/icons/instagram-square.svg`}
             ></img>
           </a>
           <a href="https://vimeo.com/showcase/11825220?share=copy">
-            <img className="contact-icon" src="src\assets\vimeo.svg"></img>
+            <img
+              className="contact-icon"
+              src={`${import.meta.env.BASE_URL}/icons/vimeo.svg`}
+            ></img>
           </a>
           <a href="https://www.redbubble.com/people/thomashalouva/shop">
-            <img className="contact-icon" src="src\assets\redbubble.svg"></img>
+            <img
+              className="contact-icon"
+              src={`${import.meta.env.BASE_URL}/icons/redbubble.svg`}
+            ></img>
           </a>
           <a href="mailto:thomas.halouva@outlook.com">
             <img
               className="contact-icon"
-              src="src\assets\envelope-square.svg"
+              src={`${import.meta.env.BASE_URL}/icons/envelope-square.svg`}
             ></img>
           </a>
         </div>
