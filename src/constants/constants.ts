@@ -1,11 +1,10 @@
 const categories = {
   Travel: "Travel",
-  ResidentialProperty: "Residential Property",
+  Property: "Property Photography",
   Drone: "Drone",
   Lifestyle: "Lifestyle",
   Products: "Products",
   Animals: "Animals",
-  CommercialProperty: "Commercial Property",
   Empty: "",
 };
 

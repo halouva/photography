@@ -3,10 +3,6 @@ import Bio from "./Bio";
 import { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-// type CategoryScreenProps = {
-//   category: string;
-// };
-
 function CategoryScreen() {
   function getThumbnails(onClick: (imgPath: string) => void, category: string) {
     // ------ thumbnails ------
@@ -34,7 +30,7 @@ function CategoryScreen() {
     return `/src/assets/${category}/thumbnails/${num}.jpg`;
   }
 
-  let { categoryName } = useParams();
+  const { categoryName } = useParams();
   if (!categoryName || categoryName === undefined) {
     return;
   }
