@@ -1,2 +1,1 @@
-# photography
-Photography Portfolio
+Thomas Halouva's Photography Portfolio
